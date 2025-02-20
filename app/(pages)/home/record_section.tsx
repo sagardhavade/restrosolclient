@@ -1,5 +1,5 @@
 import React from 'react';
-import Clients_details from '../common/clients_details';
+// import Clients_details from '../common/clients_details';
 
 function Record_section() {
   return (
@@ -36,7 +36,7 @@ function Record_section() {
           </div>
         </div>
         <div className="record_clients_card">
-          <Clients_details />
+          {/* <Clients_details /> */}
         </div>
       </div>
     </>

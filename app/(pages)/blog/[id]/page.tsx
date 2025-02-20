@@ -39,15 +39,14 @@ interface Blog {
   points: string[];
 }
 
-function details() {
+function Details() {
   const params = useParams();
-  const id = params?.id as string; // Ensure `id` is a string
+  const id = Array.isArray(params.id) ? params.id[0] : params.id; // ✅ Ensure `id` is a string
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   console.log(id);
   useEffect(() => {
     if (!id) return;
-
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -220,4 +219,4 @@ function details() {
   );
 }
 
-export default details;
+export default Details;
