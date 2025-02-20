@@ -33,6 +33,15 @@ export const getBlog = async () => {
         throw err;
     }
 }
+export const getBlogById = async (id: string) => {
+    try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/blog/${id}`);
+        return res.data; // ✅ Return the response data
+    } catch (err) {
+        console.error("Error fetching blog:", err);
+        throw err;
+    }
+};
 
 export const deleteBlog = async (id: string,) =>{
     try{

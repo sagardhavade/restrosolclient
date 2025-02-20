@@ -107,7 +107,7 @@
 
 
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Excited from '../common/faq_excited';
 import Link from 'next/link';
@@ -117,9 +117,19 @@ import s_logo from '../../../public/images/ri_search-line.svg';
 import './style/style.css';
 import View_all from '../common/view_all';
 import Navigation from '../common/navigation';
-
+import { getBlog } from '@/app/api/blog/pageApi';
+// Define a type for blog data
+interface Blog {
+  id: string;
+  title: string;
+  category: string;
+  sectionDecription: string;
+  sectionImage: string;
+  date: string;
+}
 const BlogPost = () => { // Renamed to BlogPost
   const [query, setQuery] = useState('');
+  const [blogs,setBlogs] = useState<Blog[]>([]);
   const router = useRouter();
 
   const handleInputChange = (e: any) => {
@@ -131,6 +141,20 @@ const BlogPost = () => { // Renamed to BlogPost
     router.push(`/search?query=${query}`);
   };
 
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const blogRes = await getBlog();
+        console.log("blogRes", blogRes);
+        setBlogs(blogRes);  
+      } catch (err) {
+        console.error("Error fetching blog:", err);
+      }
+    };
+  
+    fetchBlog();
+  }, []); // ✅ Empty dependency array ensures it runs only once
+  
   return (
     <>
       <div className="blogs">
@@ -184,7 +208,7 @@ const BlogPost = () => { // Renamed to BlogPost
         </div>
       </div>
       <div className="blogs_underline"></div>
-      <div className="image_card_container">
+      {/* <div className="image_card_container">
         {[1, 2, 3, 4, 5, 6].map((item, i) => (
           <Link href="/blog/How Can a Restaurant Consultant Help Improve Menu Development?" className="image_category_card" key={i}>
             <div className="image_category_img">
@@ -203,7 +227,36 @@ const BlogPost = () => { // Renamed to BlogPost
             </div>
           </Link>
         ))}
-      </div>
+      </div> */}
+
+<div className="image_card_container">
+      {blogs.length > 0 ? (
+        blogs.map((blog, i) => (
+          <Link
+            // href={`/blog/${blog.title.replace(/\s+/g, "-")}`}
+            href={`/blog/${blog.id}`}
+            className="image_category_card"
+            key={blog.id}
+          >
+            <div className="image_category_img">
+              <Image src={blog.sectionImage} alt={blog.title} width={350} height={240} />
+              {/* <Image src={blog.sectionImage} alt={blog.title} fill  /> */}
+            </div>
+            <div className="image_category_text">
+              <div className="image_title">{blog.title}</div>
+              <div className="image_paragraph">{blog.sectionDecription}</div>
+              <div className="bottom_line"></div>
+              <div className="category_bottom">
+                <div className="category_blog">{blog.category}</div>
+                <div className="category_blog">{new Date(blog.date).toDateString()}</div>
+              </div>
+            </div>
+          </Link>
+        ))
+      ) : (
+        <p>No blogs found.</p>
+      )}
+    </div>
       <View_all />
       <Excited />
     </>

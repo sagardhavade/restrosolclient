@@ -119,7 +119,9 @@ const AddBrand: React.FC = () => {
             setSection3Description(matchedItem.section3Decription || '');
             setSection4Title(matchedItem.section4Title || '');
             setSection4Description(matchedItem.section4Decription || '');
-            setPoints(matchedItem.points || []);
+            // setPoints(matchedItem.points || []);
+            setPoints(Array.isArray(matchedItem.points) ? matchedItem.points[0]?.split(",") : []);
+
             setSectionImage(matchedItem.sectionImage);
           }
 
@@ -192,11 +194,11 @@ const AddBrand: React.FC = () => {
 
   // Save Section to LocalStorage
   const handleSaveSection = () => {
-   // Check if sectionImage is not an array or if it's an empty array
-   if (!sectionImage || (Array.isArray(sectionImage) && sectionImage.length === 0)) {
-    alert("Image is required");
-    return; // Prevent submission if no image
-  }
+    // Check if sectionImage is not an array or if it's an empty array
+    if (!sectionImage || (Array.isArray(sectionImage) && sectionImage.length === 0)) {
+      alert("Image is required");
+      return; // Prevent submission if no image
+    }
     const section: section = {
       sectionDecription,
       points,
@@ -236,95 +238,95 @@ const AddBrand: React.FC = () => {
     };
     // Ensure prevState is always an array
     setBrandSectionData(section);
-console.log(section);
+    console.log(section);
     localStorage.setItem("brandSectionData", JSON.stringify(section));
     alert("Brand Section data saved!");
   };
 
   const handleSaveBlog = async () => {
-     // Retrieve stored data from localStorage
-  const sectionData = localStorage.getItem("sectionData");
-  const brandSectionData = localStorage.getItem("brandSectionData");
-  const section1Data = localStorage.getItem("section1Data");
+    // Retrieve stored data from localStorage
+    const sectionData = localStorage.getItem("sectionData");
+    const brandSectionData = localStorage.getItem("brandSectionData");
+    const section1Data = localStorage.getItem("section1Data");
 
-  // Log retrieved data for debugging
-  console.log("sectionData:", sectionData);
-  console.log("brandSectionData:", brandSectionData);
-  console.log("section1Data:", section1Data);
+    // Log retrieved data for debugging
+    console.log("sectionData:", sectionData);
+    console.log("brandSectionData:", brandSectionData);
+    console.log("section1Data:", section1Data);
 
-  // Check if any section data is missing
-  if (sectionData == null || brandSectionData == null || section1Data == null) {
-    alert("Please Save All Sections");
-    return; // Prevent further processing if any section is missing
-  }
+    // Check if any section data is missing
+    if (sectionData == null || brandSectionData == null || section1Data == null) {
+      alert("Please Save All Sections");
+      return; // Prevent further processing if any section is missing
+    }
 
-  // Parse JSON data from localStorage
-  const section = sectionData ? JSON.parse(sectionData) : null;
-  const brandSection = brandSectionData ? JSON.parse(brandSectionData) : null;
-  const section1 = section1Data ? JSON.parse(section1Data) : null;
+    // Parse JSON data from localStorage
+    const section = sectionData ? JSON.parse(sectionData) : null;
+    const brandSection = brandSectionData ? JSON.parse(brandSectionData) : null;
+    const section1 = section1Data ? JSON.parse(section1Data) : null;
 
-  // Check if the parsed data is valid
-  if (!section || !brandSection || !section1) {
-    alert("Some section data is invalid or missing.");
-    return; // Prevent submission if parsed data is not valid
-  }
+    // Check if the parsed data is valid
+    if (!section || !brandSection || !section1) {
+      alert("Some section data is invalid or missing.");
+      return; // Prevent submission if parsed data is not valid
+    }
 
-  // Combine all data into one object (optional: this can be used later if needed)
-  const combinedData = {
-    ...section,
-    ...brandSection,
-    ...section1,
-  };
-  console.log("combinedData:", combinedData);
+    // Combine all data into one object (optional: this can be used later if needed)
+    const combinedData = {
+      ...section,
+      ...brandSection,
+      ...section1,
+    };
+    console.log("combinedData:", combinedData);
 
-  // Image validation (if applicable)
-  if (!sectionImage || (Array.isArray(sectionImage) && sectionImage.length === 0)) {
-    alert("Image is required");
-    return; // Prevent submission if no image
-  }
+    // Image validation (if applicable)
+    if (!sectionImage || (Array.isArray(sectionImage) && sectionImage.length === 0)) {
+      alert("Image is required");
+      return; // Prevent submission if no image
+    }
 
-  // Create formData and append the parsed data
-  const formData = new FormData();
+    // Create formData and append the parsed data
+    const formData = new FormData();
 
-  // Append form data only if the fields are valid
-  if (brandSection.category) {
-    formData.append("category", brandSection.category);
-  } else {
-    alert("Category is missing in the brand section");
-    return; // Prevent submission if category is missing
-  }
+    // Append form data only if the fields are valid
+    if (brandSection.category) {
+      formData.append("category", brandSection.category);
+    } else {
+      alert("Category is missing in the brand section");
+      return; // Prevent submission if category is missing
+    }
 
-  // Append other fields conditionally (using optional chaining or checking for existence)
-  if (brandSection.title) formData.append("title", brandSection.title);
-  if (brandSection.description) formData.append("description", brandSection.description);
-  if (section.sectionDecription) formData.append("sectionDecription", section.sectionDecription);
-  if (Array.isArray(section.points)) formData.append("points", JSON.stringify(section.points)); // Assuming points is an array
-  if (section1.section1Title) formData.append("section1Title", section1.section1Title);
-  if (section1.section1Decription) formData.append("section1Decription", section1.section1Decription);
-  if (section1.section2Title) formData.append("section2Title", section1.section2Title);
-  if (section1.section2Decription) formData.append("section2Decription", section1.section2Decription);
-  if (section1.section3Title) formData.append("section3Title", section1.section3Title);
-  if (section1.section3Decription) formData.append("section3Decription", section1.section3Decription);
-  if (section1.section4Title) formData.append("section4Title", section1.section4Title);
-  if (section1.section4Decription) formData.append("section4Decription", section1.section4Decription);
+    // Append other fields conditionally (using optional chaining or checking for existence)
+    if (brandSection.title) formData.append("title", brandSection.title);
+    if (brandSection.description) formData.append("description", brandSection.description);
+    if (section.sectionDecription) formData.append("sectionDecription", section.sectionDecription);
+    if (section.points) formData.append("points", section.points || ""); // Assuming points is an array
+    if (section1.section1Title) formData.append("section1Title", section1.section1Title);
+    if (section1.section1Decription) formData.append("section1Decription", section1.section1Decription);
+    if (section1.section2Title) formData.append("section2Title", section1.section2Title);
+    if (section1.section2Decription) formData.append("section2Decription", section1.section2Decription);
+    if (section1.section3Title) formData.append("section3Title", section1.section3Title);
+    if (section1.section3Decription) formData.append("section3Decription", section1.section3Decription);
+    if (section1.section4Title) formData.append("section4Title", section1.section4Title);
+    if (section1.section4Decription) formData.append("section4Decription", section1.section4Decription);
 
-  // If sectionImageFile is an array, append it to the formData (if available)
-  if (sectionImage && Array.isArray(sectionImage) && sectionImage.length > 0) {
-    formData.append("sectionImage", sectionImage[0]); // Assuming sectionImage is an array, append the first image
-  }
+    // If sectionImageFile is an array, append it to the formData (if available)
+    if (sectionImage && Array.isArray(sectionImage) && sectionImage.length > 0) {
+      formData.append("sectionImage", sectionImage[0]); // Assuming sectionImage is an array, append the first image
+    }
 
-  // Log the FormData for debugging (be cautious with FormData logging)
-  console.log("FormData:", formData);
-  //   console.log("sectionImage", sectionImageFile.length)
-  //   // Append files to form data
-  //   if (sectionImageFile.length > 0) {
-  //     sectionImageFile.forEach(file => {
-  //       formData.append("sectionImage", file); // Append each image/video to "images" field
-  //     });
-  //   } else {
-  //     // If no images, you can choose to append null or empty array
-  //     formData.append("sectionImage", JSON.stringify([])); // Append an empty array if no images
-  //   }
+    // Log the FormData for debugging (be cautious with FormData logging)
+    console.log("FormData:", formData);
+    //   console.log("sectionImage", sectionImageFile.length)
+    //   // Append files to form data
+    //   if (sectionImageFile.length > 0) {
+    //     sectionImageFile.forEach(file => {
+    //       formData.append("sectionImage", file); // Append each image/video to "images" field
+    //     });
+    //   } else {
+    //     // If no images, you can choose to append null or empty array
+    //     formData.append("sectionImage", JSON.stringify([])); // Append an empty array if no images
+    //   }
 
     // Log FormData contents for debugging
     formData.forEach((value, key) => {
@@ -562,6 +564,36 @@ console.log(section);
                       style: { height: 'auto', padding: '10px' },
                     }}
                   />
+                  {/* {points.map((point, index) => (
+                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                      <CheckCircleIcon />
+                      <TextField
+                        placeholder={`Add Point ${index + 1}...`}
+                        value={point}
+                        onChange={(e) => handlePointChange(index, e.target.value)}
+                        sx={{
+                          border: 'none',
+                          color: '#6B7280',
+                          background: '#F9FAFB',
+                          borderRadius: '4px',
+                          flex: 1,
+                          ml: 1,
+                          '& .MuiInputBase-input': {
+                            padding: '10px',
+                            color: '#000',
+                          },
+                        }}
+                        InputProps={{
+                          style: { padding: '10px' },
+                        }}
+                      />
+                      <IconButton onClick={() => removePoint(index)} sx={{ color: 'red', ml: 1 }}>
+                        <CancelRoundedIcon />
+                      </IconButton>
+                    </Box>
+                  ))} */}
+
+
                   {points.map((point, index) => (
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                       <CheckCircleIcon />
@@ -623,7 +655,7 @@ console.log(section);
                       width={466}
                       height={366}
                       style={{ borderRadius: "8px", objectFit: "cover" }}
-                      
+
                     />
                   ) : (
                     <p>No image selected</p>
@@ -894,7 +926,7 @@ console.log(section);
 
             {id ? 'Update Blog' : 'Save Blog'} {/* Conditionally render text */}
           </Button>
-         
+
         </Grid>
       </DashboadRootLayout>
     </>

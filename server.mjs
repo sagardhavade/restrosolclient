@@ -20,7 +20,7 @@ import { createServer } from "http";
 import { parse } from "url";
 import next from "next";
 console.log(process.env.NODE_ENV);
-const port = parseInt(process.env.PORT || "5006", 10);
+const port = parseInt(process.env.PORT || "5009", 10);
 const dev = process.env.NODE_ENV !== "production";
 console.log(dev);
 const app = next({ dev });

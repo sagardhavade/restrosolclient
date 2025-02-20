@@ -1,4 +1,8 @@
+"use client"
 import React from 'react';
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+
 import Clients_details from '../../common/clients_details';
 import './style/style.css';
 import Link from 'next/link';
@@ -12,7 +16,56 @@ import share from '@/public/images/share.svg';
 import calender from '@/public/images/calendar1.svg';
 import frame3 from '@/public/images/Image.svg';
 import Comments from './comments';
+
+
+import { getBlogById } from '@/app/api/blog/pageApi';
+interface Blog {
+  id: string;
+  _id: string;
+  category: string;
+  title: string;
+  sectionDecription: string;
+  section1Title: string;
+  section1Decription: string;
+  section2Title: string;
+  section2Decription: string;
+  section3Title: string;
+  section3Decription: string;
+  section4Title: string;
+  section4Decription: string;
+  sectionImage: string;
+  date: string;
+  __v: number;
+  points: string[];
+}
+
 function details() {
+  const params = useParams();
+  const id = params?.id as string; // Ensure `id` is a string
+  const [blog, setBlog] = useState<Blog | null>(null);
+  const [loading, setLoading] = useState(true);
+  console.log(id);
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const blogRes = await getBlogById(id);
+        setBlog(blogRes); // ✅ Now blogRes is assigned correctly
+      } catch (err) {
+        console.error("Error fetching blog:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (loading) return <p>Loading...</p>;
+  if (!blog) return <p>No blog found</p>;
+
   return (
     <>
       <div className="section1400">
@@ -21,7 +74,7 @@ function details() {
             <Image src={left_arrow} alt="Logo" width={20} height={20} />
             &nbsp; Back to Blogs
           </Link>
-          <div className="blogs_top_title">How Can a Restaurant Consultant Help Improve Menu Development?</div>
+          <div className="blogs_top_title">{blog.title}</div>
         </div>
         <div className="blogs_banner">
           <Image src={frame} alt="Logo" width={1440} height={500} />
@@ -29,7 +82,12 @@ function details() {
             <div className="share_box">
               <div className="updated_date">
                 <Image src={calender} alt="Logo" width={20} height={20} />
-                &nbsp;&nbsp;Apr 8, 2023
+                &nbsp;&nbsp;{blog.date && new Date(blog.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+
               </div>
               <div className="comments">
                 <Image src={comments} alt="Logo" width={20} height={20} />
@@ -49,38 +107,32 @@ function details() {
           </div>
         </div>
         <div className="details_section">
-          <div className="details_title">Restaurant Building Process for Beginners</div>
+          <div className="details_title">{blog.section1Title}</div>
           <div className="details_paragraph_card">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in
+           {blog.section1Decription}
           </div>
-          <div className="details_paragraph_card">
+          {/* <div className="details_paragraph_card">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
             dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
             ea commodo consequat. Duis aute irure dolor in reprehenderit in non proident, sunt in culpa qui officia
             deserunt mollit anim id est laborum
-          </div>
+          </div> */}
 
           <div className="details_card">
             <div>
-              <div className="details_title_card">Just greatest Article in the world</div>
+              <div className="details_title_card">{blog.section2Title}</div>
               <div className="details_paragraph_card">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                ex ea commodo consequat
+              {blog.section2Decription}
               </div>
             </div>
             <div>
-              <div className="details_title_card">Just greatest Article in the world</div>
+              <div className="details_title_card">{blog.section2Title}</div>
               <div className="details_paragraph_card">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                ex ea commodo consequat
+              {blog.section3Decription}
               </div>
             </div>
           </div>
-          <div className="details">
+          {/* <div className="details">
             <div className="details_title">Step for Beginners</div>
             <div className="details_paragraph_card">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
@@ -93,31 +145,23 @@ function details() {
               ea commodo consequat. Duis aute irure dolor in reprehenderit in non proident, sunt in culpa qui officia
               deserunt mollit anim id est laborum
             </div>
-          </div>
+          </div> */}
           <div className="about_section_card2">
-            <Clients_details />
+            {/* <Clients_details /> */}
+            <Clients_details
+  sectionImage={blog.sectionImage}
+  points={blog.points}
+  sectionDescription={blog.sectionDecription}
+/>
+
           </div>
           <div className="details">
-            <div className="details_title">Design Process for Beginners</div>
+            <div className="details_title">{blog.section4Title}</div>
             <div className="details_paragraph_card">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            
             </div>
             <div className="details_paragraph_card">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat. Duis aute irure dolor in reprehenderit in non proident, sunt in culpa qui officia
-              deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-              ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-              ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in non proident, sunt in culpa
-              qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+            {blog.section4Decription}
             </div>
           </div>
           <div className="comment_share">

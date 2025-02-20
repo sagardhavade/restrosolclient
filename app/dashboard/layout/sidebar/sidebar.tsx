@@ -39,7 +39,7 @@ const theme = createTheme({
             backgroundColor: '#000',
             color: '#fff',
             borderRadius: '10px',
-            
+
             '& .MuiListItemIcon-root': {
               color: '#fff',
             },
@@ -54,14 +54,14 @@ const theme = createTheme({
 });
 
 // const Sidebar: React.FC = () => {
-  const Sidebar: React.FC<SidebarProps> = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
 
   const [activeItem, setActiveItem] = useState<string>('');
 
   const handleItemClick = (href: string) => {
     setActiveItem(href);
   };
-
+  
   const Forms: MenuItem[] = [
     {
       title: 'Contact List',
@@ -131,11 +131,11 @@ const theme = createTheme({
         sx={{
           width: '240px',
           flexShrink: 0,
-          height:'1070px',
+          height: '1070px',
           '& .MuiDrawer-paper': {
             width: '240px',
             backgroundColor: '#fff',
-            borderRight:'0px',
+            borderRight: '0px',
             fontFamily: "Nunito Sans",
           },
         }}
@@ -145,9 +145,9 @@ const theme = createTheme({
             width: '100%',
             p: '10px',
             overflowY: 'scroll',
-            '&::-webkit-scrollbar': { display: 'none' }, 
-            msOverflowStyle: 'none', 
-            scrollbarWidth: 'none', 
+            '&::-webkit-scrollbar': { display: 'none' },
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none',
 
           }}
         >
@@ -199,7 +199,7 @@ const theme = createTheme({
             </List>
           </Box>
           <Divider sx={{ borderBottom: '1px solid rgba(224, 224, 224, 1)' }} />
-          <List sx={{ display: 'flex', flexDirection: 'column' }}>
+          {/* <List sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography sx={{ fontWeight: '600', fontSize: '14px', lineHeight: '16.37px', color: '#d9d9d9', ml: 2 }}>
               Setting
             </Typography>
@@ -211,7 +211,44 @@ const theme = createTheme({
                 </ListItem>
               </Link>
             ))}
+          </List> */}
+          <List sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography
+              sx={{
+                fontWeight: '600',
+                fontSize: '14px',
+                lineHeight: '16.37px',
+                color: '#d9d9d9',
+                ml: 2,
+              }}
+            >
+              Setting
+            </Typography>
+            {Settings.map((setting) => (
+              setting.title === 'Logout' ? (
+                <ListItem
+                  key={setting.title}
+                  button
+                  sx={{ color: '#000', mt: -1 }}
+                  onClick={() => {
+                    localStorage.removeItem('token'); // Remove token
+                    window.location.href = '/dashboard/authentication/login'; // Redirect to login
+                  }}
+                >
+                  <ListItemIcon>{setting.icon}</ListItemIcon>
+                  <ListItemText primary={setting.title} />
+                </ListItem>
+              ) : (
+                <Link key={setting.title} href={setting.href} sx={{ textDecoration: 'none' }}>
+                  <ListItem button sx={{ color: '#000', mt: -1 }}>
+                    <ListItemIcon>{setting.icon}</ListItemIcon>
+                    <ListItemText primary={setting.title} />
+                  </ListItem>
+                </Link>
+              )
+            ))}
           </List>
+
         </Box>
       </Drawer>
     </ThemeProvider>

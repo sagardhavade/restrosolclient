@@ -3,19 +3,39 @@ import Image from 'next/image';
 import frame from '@/public/images/home-about.png';
 import logo from '@/public/images/Check circle.svg';
 import '../home/style/style.css';
-function Clients_details() {
+interface ClientsDetailsProps {
+  sectionImage: string;
+  points: string[];
+  sectionDescription: string;
+}
+// function Clients_details() {
+const Clients_details: React.FC<ClientsDetailsProps> = ({ sectionImage, points = [], sectionDescription }) => {
+  const formattedPoints = typeof points[0] === "string" ? points[0].split(",") : points;
+
+  console.log(formattedPoints); // Debugging: Check the output
   return (
     <>
+      {/* <div className="record_clients_image">
+        <Image src={sectionImage} alt="Logo" width={940} height={550} />
+      </div> */}
       <div className="record_clients_image">
-        <Image src={frame} alt="Logo" width={564} height={558} />
+        <Image
+          src={sectionImage}
+          alt="Logo"
+          width={0}  // Dynamically scales
+          height={0} // Dynamically scales
+          sizes="100vw" // Takes full width of the parent container
+          style={{ width: '100%', height: 'auto' }} // Makes it responsive
+        />
       </div>
-      <div style={{width:"800px"}}>
+
+      <div style={{ width: "800px" }}>
         <div className="record_title">Whom we Serve?</div>
         <div className="record_headline">we cater to</div>
         <div className="record_clients_paragraph">
-        Definition-We are India’s one of the Best Bar and Restaurant consultants providing end-to-end restaurant consulting services. Restrosol is also known for food service industry experts which provides planned techniques and guidance and serves a high-quality service to retrieve your business and achieve long-run success for you.
+          {sectionDescription}
         </div>
-        <div className="record_description">
+        {/* <div className="record_description">
           <p>
             <span>
               <Image src={logo} alt="Logo" width={16} height={16} className="icon" />
@@ -46,7 +66,19 @@ function Clients_details() {
             </span>
             &nbsp;Food Service Industry – Businesses within the food service industry seeking expert guidance to improve quality and profitability.
           </p>
+        </div> */}
+        <div className="record_description">
+          {formattedPoints.map((point, index) => (
+            <p key={index}>
+              <span>
+                <Image src={logo} alt="Logo" width={16} height={16} className="icon" />
+              </span>
+              &nbsp;{point.trim()} {/* Trim spaces */}
+            </p>
+          ))}
         </div>
+
+
       </div>
     </>
   );

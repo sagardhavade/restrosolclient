@@ -48,15 +48,15 @@ const contactSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    // addContact: (state, action: PayloadAction<any>) => {
-    //   state.loading = true;
-    //   state.error = null;
-    //   console.log('Slice');
-    // },
-    addContact: (state, action: PayloadAction<AddContactPayload>) => {
+    addContact: (state, action: PayloadAction<any>) => {
       state.loading = true;
       state.error = null;
+      console.log('Slice');
     },
+    // addContact: (state, action: PayloadAction<AddContactPayload>) => {
+    //   state.loading = true;
+    //   state.error = null;
+    // },
 
     addContactSuccess: (state, action: PayloadAction<any>) => {
       state.loading = false;
